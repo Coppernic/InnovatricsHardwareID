@@ -12,16 +12,26 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @BindView(R.id.tvHardwareId)
     TextView tvHardwareId;
 
+    private MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        HardwareIdInteractor interactor = new HardwareIdInteractorInnovatrics();
+        presenter = new MainPresenterImpl(this, interactor);
     }
 
     @Override
     public void showHardwareId(String hardwareId) {
         tvHardwareId.setText(hardwareId);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getHardwareId();
     }
 }
