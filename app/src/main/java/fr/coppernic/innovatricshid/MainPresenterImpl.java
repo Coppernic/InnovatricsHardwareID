@@ -21,9 +21,12 @@ public class MainPresenterImpl implements MainPresenter {
         byte[] hwIdBytes = hardwareIdInteractor.getHardwareId();
 
         if (hwIdBytes != null) {
-            mainView.showHardwareId(CpcBytes.byteArrayToAsciiString(hwIdBytes));
+            String hwId = CpcBytes.byteArrayToAsciiString(hwIdBytes);
+            mainView.showHardwareId(hwId);
+            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("HardwareID", hwId, hwId);
         } else {
             mainView.showHardwareId("Error");
+            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("HardwareID", "Error", "Error");
         }
     }
 }
