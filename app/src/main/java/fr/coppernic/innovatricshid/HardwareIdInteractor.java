@@ -5,5 +5,6 @@ package fr.coppernic.innovatricshid;
  */
 
 public interface HardwareIdInteractor {
+    String getSerialNumber();
     byte[] getHardwareId();
 }

@@ -1,5 +1,7 @@
 package fr.coppernic.innovatricshid;
 
+import android.os.Build;
+
 import com.innovatrics.iengine.ansiiso.AnsiIso;
 
 /**
@@ -14,7 +16,14 @@ public class HardwareIdInteractorInnovatrics implements HardwareIdInteractor {
     }
 
     @Override
+    public String getSerialNumber() {
+        return Build.SERIAL;
+    }
+
+    @Override
     public byte[] getHardwareId() {
         return ansiIso.getHardwareId();
     }
+
+
 }

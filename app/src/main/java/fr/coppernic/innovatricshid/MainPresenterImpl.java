@@ -1,5 +1,10 @@
 package fr.coppernic.innovatricshid;
 
+import android.os.Build;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import fr.coppernic.sdk.utils.core.CpcBytes;
 
 /**
@@ -23,10 +28,15 @@ public class MainPresenterImpl implements MainPresenter {
         if (hwIdBytes != null) {
             String hwId = CpcBytes.byteArrayToAsciiString(hwIdBytes);
             mainView.showHardwareId(hwId);
-            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("HardwareID", hwId, hwId);
+            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent(hwId, "HardwareID", "ID for Innovatrics License generation");
+            // Write a message to the database
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("hardware_ids");
+            HardwareId hardwareId = new HardwareId("Innovatrics", "Ansi/ISO", Build.SERIAL, hwId);
+            myRef.child("Innovatrics").child("AnsiISO").child(Build.SERIAL).setValue(hwId);
         } else {
             mainView.showHardwareId("Error");
-            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("HardwareID", "Error", "Error");
+            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("Error", "HardwareID", "ID for Innovatrics License generation");
         }
     }
 }
