@@ -1,8 +1,10 @@
-package fr.coppernic.innovatricshid;
+package fr.coppernic.innovatricshid.hardware;
 
 import android.os.Build;
 
 import com.innovatrics.iengine.ansiiso.AnsiIso;
+
+import fr.coppernic.sdk.utils.core.CpcBytes;
 
 /**
  * Created by benoist on 19/03/18.
@@ -21,9 +23,7 @@ public class HardwareIdInteractorInnovatrics implements HardwareIdInteractor {
     }
 
     @Override
-    public byte[] getHardwareId() {
-        return ansiIso.getHardwareId();
+    public String getHardwareId() {
+        return CpcBytes.byteArrayToAsciiString(ansiIso.getHardwareId());
     }
-
-
 }

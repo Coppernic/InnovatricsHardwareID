@@ -1,42 +1,52 @@
 package fr.coppernic.innovatricshid;
 
-import android.os.Build;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import fr.coppernic.sdk.utils.core.CpcBytes;
+import fr.coppernic.innovatricshid.authentication.AuthenticationInteractor;
+import fr.coppernic.innovatricshid.db.DatabaseInteractor;
+import fr.coppernic.innovatricshid.db.DatabaseInteractorFirebase;
+import fr.coppernic.innovatricshid.hardware.HardwareIdInteractor;
 
 /**
- * Created by benoist on 19/03/18.
+ * Main Presenter implementation
  */
 
-public class MainPresenterImpl implements MainPresenter {
+public class MainPresenterImpl implements MainPresenter, AuthenticationInteractor.AuthenticationListener {
+    private static final String EDITOR = "Innovatrics";
+    private static final String PRODUCT = "AnsiIso";
 
     private HardwareIdInteractor hardwareIdInteractor;
     private MainView mainView;
+    private DatabaseInteractor database;
+    private AuthenticationInteractor authenticationInteractor;
 
-    public MainPresenterImpl(MainView mainView, HardwareIdInteractor hardwareIdInteractor) {
+    public MainPresenterImpl(MainView mainView, HardwareIdInteractor hardwareIdInteractor, DatabaseInteractor database, AuthenticationInteractor authenticationInteractor) {
         this.mainView = mainView;
         this.hardwareIdInteractor = hardwareIdInteractor;
+        this.database = database;
+        this.authenticationInteractor = authenticationInteractor;
     }
 
     @Override
     public void getHardwareId() {
-        byte[] hwIdBytes = hardwareIdInteractor.getHardwareId();
+        // Authentication is not working without GMS, I keep the code in case for future use
+        String hwId = hardwareIdInteractor.getHardwareId();
 
-        if (hwIdBytes != null) {
-            String hwId = CpcBytes.byteArrayToAsciiString(hwIdBytes);
+        if (hwId.compareTo("") != 0) {
             mainView.showHardwareId(hwId);
-            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent(hwId, "HardwareID", "ID for Innovatrics License generation");
-            // Write a message to the database
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("hardware_ids");
-            HardwareId hardwareId = new HardwareId("Innovatrics", "Ansi/ISO", Build.SERIAL, hwId);
-            myRef.child("Innovatrics").child("AnsiISO").child(Build.SERIAL).setValue(hwId);
+            // Writes hardware ID into database
+            database.saveHwId(EDITOR, PRODUCT, hardwareIdInteractor.getSerialNumber(), hwId);
         } else {
             mainView.showHardwareId("Error");
-            new AnalyticsProviderFactory().getAnalyticsProvider().logEvent("Error", "HardwareID", "ID for Innovatrics License generation");
+            database.saveHwId(EDITOR, PRODUCT, hardwareIdInteractor.getSerialNumber(), "Error");
         }
+    }
+
+    @Override
+    public void onAuthenticationSuccess() {
+
+    }
+
+    @Override
+    public void onAuthenticationError() {
+
     }
 }

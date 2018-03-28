@@ -6,6 +6,12 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.coppernic.innovatricshid.authentication.AuthenticationInteractor;
+import fr.coppernic.innovatricshid.authentication.AuthenticationInteractorFirebase;
+import fr.coppernic.innovatricshid.db.DatabaseInteractor;
+import fr.coppernic.innovatricshid.db.DatabaseInteractorFirebase;
+import fr.coppernic.innovatricshid.hardware.HardwareIdInteractor;
+import fr.coppernic.innovatricshid.hardware.HardwareIdInteractorInnovatrics;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
@@ -21,7 +27,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         ButterKnife.bind(this);
 
         HardwareIdInteractor interactor = new HardwareIdInteractorInnovatrics();
-        presenter = new MainPresenterImpl(this, interactor);
+        DatabaseInteractor dataabseInteractor = new DatabaseInteractorFirebase();
+        AuthenticationInteractor authenticationInteractor = new AuthenticationInteractorFirebase(this);
+
+        presenter = new MainPresenterImpl(this, interactor, dataabseInteractor, authenticationInteractor);
     }
 
     @Override

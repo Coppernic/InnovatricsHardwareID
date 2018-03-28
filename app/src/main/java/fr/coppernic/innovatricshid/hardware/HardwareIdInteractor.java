@@ -1,4 +1,4 @@
-package fr.coppernic.innovatricshid;
+package fr.coppernic.innovatricshid.hardware;
 
 /**
  * Created by benoist on 19/03/18.
@@ -6,5 +6,5 @@ package fr.coppernic.innovatricshid;
 
 public interface HardwareIdInteractor {
     String getSerialNumber();
-    byte[] getHardwareId();
+    String getHardwareId();
 }
