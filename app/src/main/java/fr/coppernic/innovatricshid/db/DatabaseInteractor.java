@@ -5,5 +5,5 @@ package fr.coppernic.innovatricshid.db;
  */
 
 public interface DatabaseInteractor {
-    void saveHwId(String editor, String product, String serialNumber, String hwId);
+    void saveHwId(String editor, String product, String group,  String serialNumber, String hwId);
 }

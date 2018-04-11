@@ -33,10 +33,12 @@ public class MainPresenterImpl implements MainPresenter, AuthenticationInteracto
         if (hwId.compareTo("") != 0) {
             mainView.showHardwareId(hwId);
             // Writes hardware ID into database
-            database.saveHwId(EDITOR, PRODUCT, hardwareIdInteractor.getSerialNumber(), hwId);
+            database.saveHwId(EDITOR, PRODUCT, mainView.getGroup(), hardwareIdInteractor.getSerialNumber(), hwId);
+            mainView.showResult(true);
         } else {
             mainView.showHardwareId("Error");
-            database.saveHwId(EDITOR, PRODUCT, hardwareIdInteractor.getSerialNumber(), "Error");
+            database.saveHwId(EDITOR, PRODUCT, mainView.getGroup(), hardwareIdInteractor.getSerialNumber(), "Error");
+            mainView.showResult(false);
         }
     }
 

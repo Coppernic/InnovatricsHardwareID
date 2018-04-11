@@ -6,4 +6,6 @@ package fr.coppernic.innovatricshid;
 
 public interface MainView {
     void showHardwareId(String hardwareId);
+    String getGroup();
+    void showResult(boolean result);
 }

@@ -1,11 +1,14 @@
 package fr.coppernic.innovatricshid;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fr.coppernic.innovatricshid.authentication.AuthenticationInteractor;
 import fr.coppernic.innovatricshid.authentication.AuthenticationInteractorFirebase;
 import fr.coppernic.innovatricshid.db.DatabaseInteractor;
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @BindView(R.id.tvHardwareId)
     TextView tvHardwareId;
+    @BindView(R.id.etGroup)
+    EditText etGroup;
 
     private MainPresenter presenter;
 
@@ -39,8 +44,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
+    public String getGroup() {
+        return etGroup.getText().toString();
+    }
+
+    @Override
+    public void showResult(boolean result) {
+        Snackbar.make(tvHardwareId,result?R.string.hardwareid_created:R.string.error, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @OnClick(R.id.floatingActionButton)
+    void sendHwId() {
         presenter.getHardwareId();
     }
 }
